@@ -1,0 +1,52 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { faqs } from '../data/faqs';
+import { site } from '../data/site';
+---
+
+<Base title="Venue & FAQ" description="Venue, getting there and frequently asked questions for CalCup 2027.">
+  <PageHeader eyebrow={site.location} title="Venue & FAQ" />
+
+  <section class="wrap grid gap-4 pt-14 md:grid-cols-3">
+    <div class="card p-7 md:col-span-2">
+      <p class="eyebrow">Venue</p>
+      <h2 class="display mt-2 text-4xl">To be announced</h2>
+      <p class="mt-4 max-w-xl text-cream/75">
+        We’re finalizing a ground in the Bay Area. Once it’s confirmed you’ll find the address, a map, parking and directions here.
+      </p>
+      <div class="mt-6 grid aspect-[16/7] place-items-center rounded-xl border border-dashed border-line text-muted">Map coming soon</div>
+    </div>
+    <div class="grid gap-4">
+      {
+        [
+          { k: 'Dates', v: site.dates },
+          { k: 'First ball', v: '8:00 AM (draft)' },
+          { k: 'Grounds', v: '2 (draft)' },
+        ].map((f) => (
+          <div class="card p-6">
+            <p class="eyebrow !text-xs">{f.k}</p>
+            <p class="display mt-1 text-3xl">{f.v}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="wrap pt-16">
+    <h2 class="display text-4xl">Frequently asked questions</h2>
+    <div class="mt-6 divide-y divide-line border-y border-line">
+      {
+        faqs.map((f) => (
+          <details class="group py-5">
+            <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-xl font-semibold uppercase [&::-webkit-details-marker]:hidden">
+              {f.q}
+              <span class="text-2xl text-gold transition group-open:rotate-45">+</span>
+            </summary>
+            <p class="mt-3 max-w-3xl text-cream/75">{f.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </section>
+</Base>

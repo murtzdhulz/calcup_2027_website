@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { format, points, rules } from '../data/rules';
+---
+
+<Base title="Format & Rules" description="How CalCup 2027 works: T10 format, groups, knockouts and playing conditions.">
+  <PageHeader eyebrow="T10 · Ten overs a side" title="Format & Rules" intro="Draft for the organizing committee. Nothing on this page is final yet." />
+
+  <section class="wrap pt-14">
+    <h2 class="display text-4xl">Tournament format</h2>
+    <ol class="mt-8 grid gap-4 md:grid-cols-3">
+      {
+        format.map((s) => (
+          <li class="card relative overflow-hidden p-7">
+            <span class="display absolute -top-3 right-3 text-8xl text-gold/10">{s.step}</span>
+            <h3 class="display text-3xl text-gold">{s.title}</h3>
+            <p class="mt-3 text-cream/75">{s.body}</p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap grid gap-10 pt-16 lg:grid-cols-[1fr_20rem]">
+    <div>
+      <h2 class="display text-4xl">Playing conditions</h2>
+      <dl class="mt-6 divide-y divide-line border-y border-line">
+        {
+          rules.map((r) => (
+            <div class="grid gap-1 py-5 sm:grid-cols-[10rem_1fr]">
+              <dt class="font-display text-lg font-bold tracking-wider text-gold uppercase">{r.title}</dt>
+              <dd class="text-cream/80">{r.body}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+    <aside class="card h-fit p-6">
+      <h2 class="display text-3xl">Points</h2>
+      <table class="mt-4 w-full">
+        <tbody>
+          {
+            points.map((p) => (
+              <tr class="border-t border-line/60">
+                <td class="py-3 text-cream/80">{p.result}</td>
+                <td class="display py-3 text-right text-3xl text-gold">{p.pts}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <p class="mt-4 text-sm text-muted">Ties on points: net run rate, then head-to-head.</p>
+    </aside>
+  </section>
+</Base>

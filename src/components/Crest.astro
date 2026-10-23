@@ -1,0 +1,49 @@
+---
+import type { Team } from '../lib/teams';
+
+// The team's crest if we have one, otherwise a default shield with its initial in team colours.
+interface Props {
+  team: Team;
+  class?: string;
+}
+const { team, class: className = 'size-20' } = Astro.props;
+const { crest, name, colours } = team.data;
+const gid = `crest-${team.id}`;
+---
+
+{
+  crest ? (
+    <img src={crest.src} alt={`${name} crest`} class:list={[className, 'object-contain']} loading="lazy" />
+  ) : (
+    <svg viewBox="0 0 300 300" class:list={[className]} role="img" aria-label={`${name} crest`}>
+      <defs>
+        <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color={colours.primary} />
+          <stop offset="1" stop-color={colours.primary} stop-opacity="0.75" />
+        </linearGradient>
+      </defs>
+      <path d="M150 288C70 258 52 190 52 140V70l18-18 80-10 80 10 18 18v70c0 50-18 118-98 148Z" fill="#0b0b0b" />
+      <path d="M150 276C82 249 64 188 64 140V76l12-12 74-9 74 9 12 12v64c0 48-18 109-86 136Z" fill={colours.secondary} />
+      <path d="M150 262C92 238 78 184 78 140V82l6-6 66-8 66 8 6 6v58c0 44-14 98-72 122Z" fill={`url(#${gid})`} />
+      <g fill={colours.secondary} opacity="0.35">
+        <rect x="126" y="92" width="8" height="40" rx="2" />
+        <rect x="146" y="92" width="8" height="40" rx="2" />
+        <rect x="166" y="92" width="8" height="40" rx="2" />
+      </g>
+      <text
+        x="150"
+        y="222"
+        text-anchor="middle"
+        font-family="Barlow Condensed, sans-serif"
+        font-weight="800"
+        font-size="120"
+        fill={colours.secondary}
+        stroke="#0b0b0b"
+        stroke-width="5"
+        paint-order="stroke"
+      >
+        {name.charAt(0)}
+      </text>
+    </svg>
+  )
+}

@@ -1,0 +1,110 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import MatchCard from '../components/MatchCard.astro';
+import Crest from '../components/Crest.astro';
+import { formatDay, getMatches, getTeams } from '../lib/teams';
+import { url } from '../lib/url';
+
+const teams = await getTeams();
+const matches = await getMatches();
+const days = [1, 2].map((day) => {
+  const list = matches.filter((m) => m.data.day === day);
+  return { day, date: formatDay(list[0].data.date), matches: list };
+});
+const groups = (['A', 'B'] as const).map((g) => ({ name: g, teams: teams.filter((t) => t.data.group === g) }));
+---
+
+<Base title="Schedule" description="CalCup 2027 match schedule: group stage, semi-finals and the final, March 20–21, 2027.">
+  <PageHeader
+    eyebrow="Fixtures · March 20–21, 2027"
+    title="Schedule"
+    intro="Draft schedule. Match times and grounds are placeholders until the venue is confirmed."
+  >
+    <div class="mt-8 flex flex-wrap items-center gap-3">
+      {days.map((d) => <a href={`#day-${d.day}`} class="btn-ghost !py-2 !text-base">Day {d.day} · {d.date.split(',')[0]}</a>)}
+      <a href="#standings" class="btn-ghost !py-2 !text-base">Standings</a>
+      <label class="ml-auto flex items-center gap-3">
+        <span class="font-display tracking-wider text-muted uppercase">Team</span>
+        <select id="team-filter" class="rounded-full border border-line bg-panel px-4 py-2 font-display text-base tracking-wide uppercase">
+          <option value="">All teams</option>
+          {teams.map((t) => <option value={t.id}>{t.data.name}</option>)}
+        </select>
+      </label>
+    </div>
+  </PageHeader>
+
+  {
+    days.map((d) => (
+      <section id={`day-${d.day}`} class="wrap pt-14">
+        <div class="flex items-baseline gap-4 border-b border-line pb-4">
+          <h2 class="display text-4xl">Day {d.day}</h2>
+          <p class="font-display text-xl tracking-wider text-gold uppercase">{d.date}</p>
+        </div>
+        <div class="mt-6 grid gap-4 md:grid-cols-2" data-match-list>
+          {d.matches.map((match) => <MatchCard match={match} teams={teams} />)}
+        </div>
+        <p class="mt-6 hidden text-muted" data-empty>No matches for this team on Day {d.day}.</p>
+      </section>
+    ))
+  }
+
+  <section id="standings" class="wrap pt-20">
+    <p class="eyebrow">Points table</p>
+    <h2 class="display mt-2 text-4xl">Group standings</h2>
+    <p class="mt-3 text-muted">Win 2 · No result 1 · Loss 0. Ties broken on net run rate.</p>
+    <div class="mt-8 grid gap-6 lg:grid-cols-2">
+      {
+        groups.map((g) => (
+          <div class="card overflow-x-auto">
+            <table class="w-full min-w-[28rem] text-left">
+              <caption class="border-b border-line px-5 py-4 text-left font-display text-2xl font-bold uppercase">Group {g.name}</caption>
+              <thead class="font-display text-sm tracking-widest text-muted uppercase">
+                <tr>
+                  <th class="px-5 py-3 font-semibold">Team</th>
+                  {['P', 'W', 'L', 'NR', 'NRR', 'Pts'].map((h) => <th class="px-2 py-3 text-center font-semibold">{h}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {g.teams.map((t) => (
+                  <tr class="border-t border-line/60">
+                    <td class="px-5 py-3">
+                      <a href={url(`teams/${t.id}/`)} class="flex items-center gap-3 hover:text-gold">
+                        <Crest team={t} class="size-8" />
+                        <span class="font-display text-lg font-semibold uppercase">{t.data.name}</span>
+                      </a>
+                    </td>
+                    {['0', '0', '0', '0', '0.000'].map((v) => <td class="px-2 py-3 text-center tabular-nums text-cream/70">{v}</td>)}
+                    <td class="px-2 py-3 text-center font-bold text-gold tabular-nums">0</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+</Base>
+
+<script>
+  const select = document.getElementById('team-filter') as HTMLSelectElement | null;
+  const apply = () => {
+    const team = select?.value ?? '';
+    document.querySelectorAll<HTMLElement>('[data-match-list]').forEach((list) => {
+      let shown = 0;
+      list.querySelectorAll<HTMLElement>('[data-teams]').forEach((card) => {
+        const match = !team || card.dataset.teams!.split(' ').includes(team);
+        card.hidden = !match;
+        if (match) shown++;
+      });
+      list.parentElement?.querySelector<HTMLElement>('[data-empty]')?.classList.toggle('hidden', shown > 0);
+    });
+  };
+  select?.addEventListener('change', apply);
+  const initial = new URLSearchParams(location.search).get('team');
+  if (select && initial) {
+    select.value = initial;
+    apply();
+  }
+</script>

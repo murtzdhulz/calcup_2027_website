@@ -1,0 +1,71 @@
+{
+  "name": "Strikers",
+  "code": "STR",
+  "group": "A",
+  "colours": {
+    "primary": "#0E7C4A",
+    "secondary": "#C5E86C"
+  },
+  "colourNames": "Emerald and lime",
+  "placeholder": true,
+  "players": [
+    {
+      "name": "Player 1",
+      "role": "Batter",
+      "captain": true
+    },
+    {
+      "name": "Player 2",
+      "role": "Batter",
+      "viceCaptain": true
+    },
+    {
+      "name": "Player 3",
+      "role": "Wicket-keeper"
+    },
+    {
+      "name": "Player 4",
+      "role": "Batter"
+    },
+    {
+      "name": "Player 5",
+      "role": "All-rounder"
+    },
+    {
+      "name": "Player 6",
+      "role": "All-rounder"
+    },
+    {
+      "name": "Player 7",
+      "role": "All-rounder"
+    },
+    {
+      "name": "Player 8",
+      "role": "Bowler"
+    },
+    {
+      "name": "Player 9",
+      "role": "Bowler"
+    },
+    {
+      "name": "Player 10",
+      "role": "Bowler"
+    },
+    {
+      "name": "Player 11",
+      "role": "Bowler"
+    },
+    {
+      "name": "Player 12",
+      "role": "Batter"
+    },
+    {
+      "name": "Player 13",
+      "role": "Wicket-keeper"
+    },
+    {
+      "name": "Player 14",
+      "role": "Bowler"
+    }
+  ]
+}

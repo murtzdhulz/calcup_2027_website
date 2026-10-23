@@ -1,0 +1,32 @@
+---
+import logo from '../assets/brand/calcup-logo-on-dark.svg';
+import phizenix from '../assets/brand/phizenix.png';
+import { nav, site } from '../data/site';
+import { url } from '../lib/url';
+---
+
+<footer class="mt-24 border-t border-line bg-espresso/60">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-[1.2fr_1fr_1fr]">
+    <div>
+      <img src={logo.src} alt="CalCup T10 2027" class="h-28 w-auto" />
+      <p class="mt-5 max-w-xs text-muted">{site.tagline}</p>
+    </div>
+    <div>
+      <p class="eyebrow mb-4">Explore</p>
+      <ul class="space-y-2">
+        {nav.map((item) => <li><a class="text-cream/80 hover:text-gold" href={url(item.href)}>{item.label}</a></li>)}
+        <li><a class="text-cream/80 hover:text-gold" href={url('register/')}>Register</a></li>
+      </ul>
+    </div>
+    <div>
+      <p class="eyebrow mb-4">Tournament weekend</p>
+      <p class="font-display text-2xl font-bold uppercase">{site.dates}</p>
+      <p class="text-muted">{site.location} · Venue {site.venue.toLowerCase()}</p>
+      <p class="eyebrow mt-8 mb-3 !text-xs !text-muted">Presented by</p>
+      <img src={phizenix.src} alt="Phizenix" class="h-7 w-auto" />
+    </div>
+  </div>
+  <div class="border-t border-line/60">
+    <div class="wrap py-5 text-sm text-muted">© 2027 CalCup · T10 cricket in the Bay Area</div>
+  </div>
+</footer>

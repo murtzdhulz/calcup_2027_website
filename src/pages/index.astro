@@ -1,0 +1,183 @@
+---
+import Base from '../layouts/Base.astro';
+import Crest from '../components/Crest.astro';
+import MatchCard from '../components/MatchCard.astro';
+import logo from '../assets/brand/calcup-logo-on-dark.svg';
+import phizenix from '../assets/brand/phizenix.png';
+import { site } from '../data/site';
+import { getMatches, getTeams } from '../lib/teams';
+import { url } from '../lib/url';
+
+const teams = await getTeams();
+const matches = await getMatches();
+const opening = matches.slice(0, 4);
+
+const facts = [
+  { value: 'T10', label: 'Ten overs a side' },
+  { value: String(teams.length), label: 'Teams' },
+  { value: String(matches.length), label: 'Matches' },
+  { value: '2', label: 'Days of cricket' },
+];
+
+const stages = [
+  { step: '01', title: 'Group stage', body: 'Two groups of five. Every team plays the other four in its group.' },
+  { step: '02', title: 'Semi-finals', body: 'The top two from each group cross over: A1 v B2 and B1 v A2.' },
+  { step: '03', title: 'The final', body: 'Sunday afternoon. One match, ten overs a side, for the CalCup.' },
+];
+---
+
+<Base>
+  <!-- Hero -->
+  <section class="glow relative overflow-hidden border-b border-line">
+    <div
+      aria-hidden="true"
+      class="pointer-events-none absolute inset-x-0 top-6 select-none text-center font-display text-[24vw] leading-none font-extrabold tracking-tight text-cream/[0.06] uppercase lg:text-[15rem]"
+    >
+      Bay Area
+    </div>
+    <div class="wrap relative flex flex-col items-center py-16 text-center sm:py-24">
+      <p class="font-display text-sm font-semibold tracking-[0.35em] text-cream/70 uppercase">Presented by</p>
+      <img src={phizenix.src} alt="Phizenix" class="mt-3 h-7 w-auto sm:h-9" />
+      <img src={logo.src} alt="CalCup T10 2027" class="mt-10 w-64 sm:w-80" />
+      <p class="mt-8 text-lg text-cream/80 sm:text-xl">{site.tagline}</p>
+
+      <div class="mt-10 grid w-full max-w-xl grid-cols-2 divide-x divide-gold/40 border-y border-gold/40 py-5">
+        <div>
+          <p class="eyebrow !text-xs">Tournament weekend</p>
+          <p class="display mt-1 text-3xl sm:text-4xl">{site.datesShort}</p>
+        </div>
+        <div>
+          <p class="eyebrow !text-xs">Location</p>
+          <p class="display mt-1 text-3xl sm:text-4xl">{site.location}</p>
+        </div>
+      </div>
+
+      <div id="countdown" data-start={site.startsAt} class="mt-10 flex gap-3 sm:gap-5" aria-label="Countdown to first ball">
+        {
+          ['days', 'hours', 'mins', 'secs'].map((unit) => (
+            <div class="card w-20 py-3 sm:w-24">
+              <p data-unit={unit} class="display text-4xl text-gold tabular-nums sm:text-5xl">--</p>
+              <p class="mt-1 font-display text-xs tracking-[0.25em] text-muted uppercase">{unit}</p>
+            </div>
+          ))
+        }
+      </div>
+
+      <div class="mt-10 flex flex-wrap justify-center gap-3">
+        <a href={url('schedule/')} class="btn-gold">View schedule</a>
+        <a href={url('teams/')} class="btn-ghost">Meet the teams</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick facts -->
+  <section class="border-b border-line bg-espresso/50">
+    <div class="wrap grid grid-cols-2 divide-line md:grid-cols-4 md:divide-x">
+      {
+        facts.map((f) => (
+          <div class="px-4 py-8 text-center">
+            <p class="display text-5xl text-gold">{f.value}</p>
+            <p class="mt-1 font-display tracking-[0.2em] text-muted uppercase">{f.label}</p>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Teams -->
+  <section class="wrap py-20">
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="eyebrow">The field</p>
+        <h2 class="display mt-2 text-5xl">Meet the teams</h2>
+      </div>
+      <a href={url('teams/')} class="font-display font-semibold tracking-wider text-gold uppercase hover:underline">All teams →</a>
+    </div>
+    <div class="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+      {
+        teams.map((team) => (
+          <a
+            href={url(`teams/${team.id}/`)}
+            class="card group flex flex-col items-center gap-3 p-6 transition hover:-translate-y-1 hover:border-gold/60"
+            style={`--team:${team.data.colours.primary}`}
+          >
+            <Crest team={team} class="size-24 transition group-hover:scale-105" />
+            <span class="display text-2xl">{team.data.name}</span>
+            <span class="chip">Group {team.data.group}</span>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- Opening matches -->
+  <section class="border-y border-line bg-espresso/40">
+    <div class="wrap py-20">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow">Saturday, March 20</p>
+          <h2 class="display mt-2 text-5xl">Opening matches</h2>
+        </div>
+        <a href={url('schedule/')} class="font-display font-semibold tracking-wider text-gold uppercase hover:underline">Full schedule →</a>
+      </div>
+      <div class="mt-10 grid gap-4 md:grid-cols-2">
+        {opening.map((match) => <MatchCard match={match} teams={teams} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- Format -->
+  <section class="wrap py-20">
+    <p class="eyebrow">How it works</p>
+    <h2 class="display mt-2 text-5xl">Road to the Cup</h2>
+    <div class="mt-10 grid gap-4 md:grid-cols-3">
+      {
+        stages.map((s) => (
+          <div class="card relative overflow-hidden p-7">
+            <span class="display absolute -top-3 right-3 text-8xl text-gold/10">{s.step}</span>
+            <h3 class="display text-3xl text-gold">{s.title}</h3>
+            <p class="mt-3 text-cream/75">{s.body}</p>
+          </div>
+        ))
+      }
+    </div>
+    <a href={url('format/')} class="btn-ghost mt-8">Format & rules</a>
+  </section>
+
+  <!-- Venue / registration band -->
+  <section class="wrap">
+    <div class="glow card grid items-center gap-8 overflow-hidden p-8 sm:p-12 md:grid-cols-[1.4fr_1fr]">
+      <div>
+        <p class="eyebrow">Venue</p>
+        <h2 class="display mt-2 text-5xl">Ground to be announced</h2>
+        <p class="mt-4 max-w-lg text-cream/75">
+          Two days of cricket somewhere in the Bay Area. We’ll share the ground, parking and food details here as soon as they’re confirmed.
+        </p>
+      </div>
+      <div class="flex flex-col gap-3 md:items-end">
+        <a href={url('info/')} class="btn-ghost">Venue & FAQ</a>
+        <a href={url('register/')} class="btn-gold">Registration details</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const el = document.getElementById('countdown');
+  if (el) {
+    const start = new Date(el.dataset.start!).getTime();
+    const set = (unit: string, n: number) => {
+      const node = el.querySelector(`[data-unit="${unit}"]`);
+      if (node) node.textContent = String(n).padStart(2, '0');
+    };
+    const tick = () => {
+      const ms = Math.max(0, start - Date.now());
+      set('days', Math.floor(ms / 86_400_000));
+      set('hours', Math.floor(ms / 3_600_000) % 24);
+      set('mins', Math.floor(ms / 60_000) % 60);
+      set('secs', Math.floor(ms / 1000) % 60);
+    };
+    tick();
+    setInterval(tick, 1000);
+  }
+</script>

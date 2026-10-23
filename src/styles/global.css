@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+
+/* CalCup brand: espresso and near-black grounds, gold and cream from the Tower wicket logo. */
+@theme {
+  --color-gold: #ddb96f;
+  --color-gold-deep: #9c7130;
+  --color-gold-soft: #ecd7a6;
+  --color-cream: #f6f0e3;
+  --color-espresso: #1c110a;
+  --color-ink: #0f0905;
+  --color-panel: #1a120c;
+  --color-line: #3a2a1c;
+  --color-muted: #b8a993;
+
+  --font-sans: 'Barlow', ui-sans-serif, system-ui, sans-serif;
+  --font-display: 'Barlow Condensed', 'Barlow', ui-sans-serif, sans-serif;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+  body {
+    @apply bg-ink text-cream font-sans antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+}
+
+@utility wrap {
+  @apply mx-auto w-full max-w-6xl px-4 sm:px-6;
+}
+
+@utility eyebrow {
+  @apply font-display text-sm font-semibold tracking-[0.25em] text-gold uppercase;
+}
+
+@utility display {
+  @apply font-display font-extrabold tracking-tight uppercase leading-[0.95];
+}
+
+@utility btn {
+  @apply inline-flex items-center gap-2 rounded-full px-6 py-3 font-display text-lg font-bold tracking-wider uppercase transition;
+}
+
+@utility btn-gold {
+  @apply btn bg-gold text-espresso hover:bg-gold-soft;
+}
+
+@utility btn-ghost {
+  @apply btn border border-gold/50 text-gold hover:border-gold hover:bg-gold/10;
+}
+
+@utility card {
+  @apply rounded-2xl border border-line bg-panel;
+}
+
+@utility chip {
+  @apply inline-flex items-center rounded-full border border-line px-2.5 py-0.5 font-display text-xs font-semibold tracking-widest uppercase text-muted;
+}
+
+/* Warm gold glow, like the flyer's backlight. */
+@utility glow {
+  background:
+    radial-gradient(60% 60% at 50% 0%, rgb(221 185 111 / 0.28), transparent 70%),
+    linear-gradient(180deg, #2a1a0e 0%, var(--color-ink) 85%);
+}
